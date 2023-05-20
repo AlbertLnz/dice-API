@@ -39,7 +39,7 @@ class UserController extends Controller
     //USER ROUTES
     public function show($id){
         $games = Game::where('user_id', $id)->get();
-        return response()->json($games);
+        return response()->json(["Your win rate" => User::find($id)['winRate'] , "Games" => $games]);
     }
 
     public function store($id){
