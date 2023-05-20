@@ -14,10 +14,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(15)->create(); // $this->call(UserSeeder::class);
+        User::factory(15)->create(); // ≈ $this->call(UserSeeder::class) x 15;
         $this->call(GameSeeder::class);
         
         $userServiceMethods = new UserService;
-        User::query()->update(['winRate' => $userServiceMethods->updateWinRateAllUsers()]); //fresh winRate column
+        $userServiceMethods->updateWinRateAllUsers();
     }
 }

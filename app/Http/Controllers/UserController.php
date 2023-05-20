@@ -57,7 +57,6 @@ class UserController extends Controller
         $game->save();
 
         $userServiceMethods->updateWinRate($user);
-        $user->update();
 
         return response()->json($game);
     }
