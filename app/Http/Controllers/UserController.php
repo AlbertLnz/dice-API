@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Game;
 use App\Http\Services\UserService;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -78,4 +79,11 @@ class UserController extends Controller
         Game::where('user_id', $id)->delete();
         return response(['message' => "Player Games deleted!"]);
     }
+
+
+    //GENERAL ROUTES
+    public function generalRanking(){
+        return response(['Average win rate of users' => DB::table('users')->sum('winRate') / User::all()->count()."%"]);
+    }
+
 }
