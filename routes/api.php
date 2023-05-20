@@ -31,6 +31,7 @@ Route::get('players/{id}/games', [UserController::class, 'show'])->name('api.pla
 Route::post('players/{id}/games', [UserController::class, 'store'])->name('api.players.store');
 Route::put('players/{id}', [UserController::class, 'update'])->name('api.players.update');
 Route::delete('players/{id}/games', [UserController::class, 'destroy'])->name('api.players.destroy');
+Route::post('logout', [PassportController::class, 'logout'])->name('api.logout');
 
 //General Routes
 Route::get('players/ranking', [UserController::class, 'generalRanking'])->name('api.players.generalRanking');
