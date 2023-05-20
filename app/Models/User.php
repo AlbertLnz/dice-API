@@ -42,4 +42,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    //One To Many Relationship
+    public function games(){
+        return $this->hasMany('App\Models\Game');
+    }
+
 }
