@@ -33,4 +33,10 @@ class Game extends Model
         }
     }
 
+    
+    //One To Many Inverse Relationship
+    public function user(){
+        return $this->belongsTo('App\Models\User');
+    }
+    
 }
