@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\Game;
+use Illuminate\Support\Facades\DB;
 
 class UserService{
 
@@ -19,6 +20,10 @@ class UserService{
         }
 
         return number_format(($percentageWin/$count)*100, 4);
+    }
+
+    public function updateWinRate($user):void{
+        $user['winRate'] = DB::table('games')->where('user_id', $user->id)->where('numberResult', 7)->count() / DB::table('games')->where('user_id', $user->id)->count('id');
     }
 
 }

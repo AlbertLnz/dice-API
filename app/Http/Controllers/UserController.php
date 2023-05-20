@@ -45,6 +45,7 @@ class UserController extends Controller
     public function store($id){
 
         $user = User::find($id);
+        $userServiceMethods = new UserService;
 
         $game = new Game;
         $game['dice1'] = $game->dice1;
@@ -52,8 +53,11 @@ class UserController extends Controller
         $game['numberResult'] = $game->numberResult;
         $game['textResult'] = $game->textResult;
         $game['user_id'] = $user->id;
-
+        
         $game->save();
+
+        $userServiceMethods->updateWinRate($user);
+        $user->update();
 
         return response()->json($game);
     }
