@@ -32,4 +32,24 @@ class PassportController extends Controller
 
         return response()->json(['token' => $token], 200);
     }
+
+    public function login(Request $request){
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'email' => 'required | email',
+            'password' => 'required | min:6',
+        ]);
+
+        if($validator->fails()){
+            return response(['error' => $validator->errors(), "Validation error"]);
+        }
+
+        if(auth()->attempt($data)){
+            $token = auth()->user()->createToken('Personal Access Token')->accessToken;
+            return response()->json(['token' => $token], 200);
+        }else{
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+    }
 }

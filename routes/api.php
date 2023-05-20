@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('register', [PassportController::class, 'register'])->name('api.register');
+Route::post('login', [PassportController::class, 'login'])->name('api.login');
 
 //Admin Routes
 Route::get('players', [UserController::class, 'index'])->name('api.players.index');
