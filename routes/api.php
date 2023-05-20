@@ -32,3 +32,4 @@ Route::delete('players/{id}/games', [UserController::class, 'destroy'])->name('a
 
 //General Routes
 Route::get('players/ranking', [UserController::class, 'generalRanking'])->name('api.players.generalRanking');
+Route::get('players/ranking/winner', [UserController::class, 'winnerRanking'])->name('api.players.winnerRanking');
