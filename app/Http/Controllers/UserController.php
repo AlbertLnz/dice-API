@@ -89,4 +89,8 @@ class UserController extends Controller
     public function winnerRanking(){
         return response(['Best user average win rate' => $max = DB::table('users')->max('winRate')."%"]);
     }
+
+    public function loserRanking(){
+        return response(['Worst user average win rate' => $max = DB::table('users')->min('winRate')."%"]);
+    }
 }
