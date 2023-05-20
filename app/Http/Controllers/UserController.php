@@ -16,23 +16,10 @@ class UserController extends Controller
     public function index(){
 
         $allPlayers = User::all(); //object
-        $allGames = Game::all(); //object
-        $playersList=array();
         $userServiceMethods = new UserService;
-
-        for($i=0 ; $i<count($allPlayers) ; $i++){
-            
-            if(isset($allPlayers[$i]['id'])){
-                $allGamesFiltred = $allGames->where('user_id', $i+1);
-                $allPlayers[$i]['winRate'] = $userServiceMethods->percentageWinRate($allGamesFiltred, $i);
-                $allPlayers[$i]->save();
-                $userGames = User::with('games')->find($i+1);
-
-                array_push($playersList, $userGames);
-            }
-        }
+        $userServiceMethods->updateWinRateAllUsers();
         
-        return $playersList;
+        return $allPlayers;
     }
 
 
