@@ -28,3 +28,4 @@ Route::get('players', [UserController::class, 'index'])->name('api.players.index
 Route::get('players/{id}/games', [UserController::class, 'show'])->name('api.players.show');
 Route::post('players/{id}/games', [UserController::class, 'store'])->name('api.players.store');
 Route::put('players/{id}', [UserController::class, 'update'])->name('api.players.update');
+Route::delete('players/{id}/games', [UserController::class, 'destroy'])->name('api.players.destroy');

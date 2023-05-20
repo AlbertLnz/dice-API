@@ -74,4 +74,8 @@ class UserController extends Controller
         }
     }
 
+    public function destroy($id){
+        Game::where('user_id', $id)->delete();
+        return response(['message' => "Player Games deleted!"]);
+    }
 }
