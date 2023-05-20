@@ -24,14 +24,18 @@ Route::post('register', [PassportController::class, 'register'])->name('api.regi
 Route::post('login', [PassportController::class, 'login'])->name('api.login');
 
 //Admin Routes
-Route::get('players', [UserController::class, 'index'])->name('api.players.index');
+Route::middleware('auth:api')->group(function(){
+    Route::get('players', [UserController::class, 'index'])->name('api.players.index');
+});
 
 //User Routes
-Route::get('players/{id}/games', [UserController::class, 'show'])->name('api.players.show');
-Route::post('players/{id}/games', [UserController::class, 'store'])->name('api.players.store');
-Route::put('players/{id}', [UserController::class, 'update'])->name('api.players.update');
-Route::delete('players/{id}/games', [UserController::class, 'destroy'])->name('api.players.destroy');
-Route::post('logout', [PassportController::class, 'logout'])->name('api.logout');
+Route::middleware('auth:api')->group(function(){
+    Route::get('players/{id}/games', [UserController::class, 'show'])->name('api.players.show');
+    Route::post('players/{id}/games', [UserController::class, 'store'])->name('api.players.store');
+    Route::put('players/{id}', [UserController::class, 'update'])->name('api.players.update');
+    Route::delete('players/{id}/games', [UserController::class, 'destroy'])->name('api.players.destroy');
+    Route::post('logout', [PassportController::class, 'logout'])->name('api.logout');
+});
 
 //General Routes
 Route::get('players/ranking', [UserController::class, 'generalRanking'])->name('api.players.generalRanking');
