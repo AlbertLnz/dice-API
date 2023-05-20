@@ -32,4 +32,12 @@ class UserController extends Controller
         
         return $playersList;
     }
+
+    
+    //USER ROUTES
+    public function show($id){
+        $games = Game::where('user_id', $id)->get();
+        return response()->json($games);
+    }
+
 }

@@ -23,3 +23,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //Admin Routes
 Route::get('players', [UserController::class, 'index'])->name('api.players.index');
+
+//User Routes
+Route::get('players/{id}/games', [UserController::class, 'show'])->name('api.players.show');
