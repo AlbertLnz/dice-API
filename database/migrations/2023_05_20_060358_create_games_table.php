@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('games', function (Blueprint $table) {
             $table->id();
+
+            $table->tinyInteger('dice1');
+            $table->tinyInteger('dice2');
+            $table->tinyInteger('numberResult');
+            $table->tinyInteger('textResult');
+
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
