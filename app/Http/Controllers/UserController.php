@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Game;
 use App\Http\Services\UserService;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -54,6 +55,23 @@ class UserController extends Controller
         $game->save();
 
         return response()->json($game);
+    }
+
+    public function update($id, Request $request){
+        $player = User::find($id);
+        $data = $request->all();
+
+        $validator = Validator::make($data, [
+            'name' => 'required | min:3',
+            'email' => 'required | email | max:50',
+            'password' => 'required | min:6'
+        ]);
+
+        if($validator->fails()){
+            return response(['error' => $validator->errors()]);
+        }else{
+            return response(['message' => "Player updated!", "Sent" => $player->update($request->all())]);
+        }
     }
 
 }
