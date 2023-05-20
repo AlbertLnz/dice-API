@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 use App\Models\Game;
+use Illuminate\Support\Facades\DB;
 
 class GameSeeder extends Seeder
 {
@@ -18,10 +19,10 @@ class GameSeeder extends Seeder
             $game = new Game;
             Game::create([
                 'dice1' => $game->dice1,
-                'dice2' => $game->dice2,
+                'dice2' => $game->dice2,    
                 'numberResult' => $game->numberResult,
                 'textResult' => $game->stringResult(),
-                'user_id' => 1,
+                'user_id' => DB::table('users')->inRandomOrder()->first()->id,
             ]);
         }
     }
