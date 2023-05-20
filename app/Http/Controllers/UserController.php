@@ -18,7 +18,7 @@ class UserController extends Controller
         $allPlayers = User::all(); //object
         $userServiceMethods = new UserService;
         $userServiceMethods->updateWinRateAllUsers();
-        
+
         return $allPlayers;
     }
 
@@ -67,6 +67,8 @@ class UserController extends Controller
 
     public function destroy($id){
         Game::where('user_id', $id)->delete();
+        User::where('id', $id)->update(['winRate' => 0]);
+
         return response(['message' => "Player Games deleted!"]);
     }
 
