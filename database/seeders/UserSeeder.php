@@ -22,6 +22,15 @@ class UserSeeder extends Seeder
             'password' => bcrypt('password'),
             'winRate' => null,
             'remember_token' => Str::random(10),
-        ]);
+        ])->assignRole('admin');
+
+        User::create([
+            'name' => 'Maria Perez',
+            'email' => 'maria@gmail.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('password'),
+            'winRate' => null,
+            'remember_token' => Str::random(10),
+        ])->assignRole('client');
     }
 }

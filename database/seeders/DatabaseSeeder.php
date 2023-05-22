@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(RoleSeeder::class);
 
-        User::factory(15)->create(); // ≈ $this->call(UserSeeder::class) x 15;
+        // User::factory(15)->create(); // ≈ $this->call(UserSeeder::class) x 15;
+        $this->call(UserSeeder::class);
         $this->call(GameSeeder::class);
         
         $userServiceMethods = new UserService;

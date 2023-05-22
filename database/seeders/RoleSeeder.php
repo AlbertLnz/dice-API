@@ -16,21 +16,20 @@ class RoleSeeder extends Seeder
     {
         $role1 = Role::create(['name' => 'admin']);
         $role2 = Role::create(['name' => 'client']); //normal user
-        $role3 = Role::create(['name' => 'anonymous']);
 
         //Passport Routes
-        Permission::create(['name' => 'api.register'])->syncRoles([$role1, $role2, $role3]);
-        Permission::create(['name' => 'api.login'])->syncRoles([$role1, $role2, $role3]);
+        Permission::create(['name' => 'api.register'])->syncRoles([$role1, $role2]);
+        Permission::create(['name' => 'api.login'])->syncRoles([$role1, $role2]);
 
         //Admin Route
         Permission::create(['name' => 'api.players.index'])->assignRole($role1);
 
         //User Routes
-        Permission::create(['name' => 'api.players.show'])->syncRoles([$role1, $role2, $role3]);
-        Permission::create(['name' => 'api.players.store'])->syncRoles([$role1, $role2, $role3]);
-        Permission::create(['name' => 'api.players.update'])->syncRoles([$role1, $role2, $role3]);
-        Permission::create(['name' => 'api.players.destroy'])->syncRoles([$role1, $role2, $role3]);
-        Permission::create(['name' => 'api.logout'])->syncRoles([$role1, $role2, $role3]);
+        Permission::create(['name' => 'api.players.show'])->syncRoles([$role1, $role2]);
+        Permission::create(['name' => 'api.players.store'])->syncRoles([$role1, $role2]);
+        Permission::create(['name' => 'api.players.update'])->syncRoles([$role1, $role2]);
+        Permission::create(['name' => 'api.players.destroy'])->syncRoles([$role1, $role2]);
+        Permission::create(['name' => 'api.logout'])->syncRoles([$role1, $role2]);
 
         //General Routes
         Permission::create(['name' => 'api.players.generalRanking']);
