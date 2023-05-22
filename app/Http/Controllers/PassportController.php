@@ -16,19 +16,17 @@ class PassportController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'name' => 'min:4',
-            'email' => 'required | email',
-            'password' => 'min:6',
+            'email' => 'email | required',
+            'password' => 'min:6 | required',
         ]);
 
         if($validator->fails()){
-            return response(['error' => $validator->errors(), "Validation error"]);
+            return response(['error' => $validator->errors(), "Validation error"], 302);
         }
     
         $user = User::create([
-            'name' => $request->fillable('name') ? $request->name : "anonymous",
+            'name' => $request->filled('name') ? $request->name : "anonymous",
             'email' => $request->email,
-            'password' => $request->fillable('password') ? $request->password : "password",
             'password' => bcrypt($request->password),
         ]);
 
