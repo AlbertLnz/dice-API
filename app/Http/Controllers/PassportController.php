@@ -8,15 +8,17 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+use function PHPUnit\Framework\isNull;
+
 class PassportController extends Controller
 {
     public function register(Request $request){
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'name' => 'required | min:4',
+            'name' => 'min:4',
             'email' => 'required | email',
-            'password' => 'required | min:6',
+            'password' => 'min:6',
         ]);
 
         if($validator->fails()){
@@ -24,8 +26,9 @@ class PassportController extends Controller
         }
     
         $user = User::create([
-            'name' => $request->name,
+            'name' => $request->fillable('name') ? $request->name : "anonymous",
             'email' => $request->email,
+            'password' => $request->fillable('password') ? $request->password : "password",
             'password' => bcrypt($request->password),
         ]);
 
