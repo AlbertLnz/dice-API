@@ -28,11 +28,11 @@ class PassportController extends Controller
             'name' => $request->filled('name') ? $request->name : "anonymous",
             'email' => $request->email,
             'password' => bcrypt($request->password),
-        ]);
+        ])->assignRole('client');
 
         $token = $user->createToken('Personal Access Token')->accessToken;
 
-        return response()->json(['token' => $token], 200);
+        return response()->json(['user' => $user, 'token' => $token], 200);
     }
 
     public function login(Request $request){
@@ -44,7 +44,7 @@ class PassportController extends Controller
         ]);
 
         if($validator->fails()){
-            return response(['error' => $validator->errors(), "Validation error"]);
+            return response(['error' => $validator->errors(), "Validation error"], 302);
         }
 
         if(auth()->attempt($data)){
