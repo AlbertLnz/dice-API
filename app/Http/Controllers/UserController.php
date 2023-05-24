@@ -33,8 +33,16 @@ class UserController extends Controller
 
     //USER ROUTES
     public function show($id){
-        $games = Game::where('user_id', $id)->get();
-        return response()->json(["Your win rate" => User::find($id)['winRate'] , "Games" => $games]);
+        if(Auth::user()->id == $id){
+            $games = Game::where('user_id', $id)->get();
+            return response()->json(["Your win rate" => User::find($id)['winRate'] , "Games" => $games]);
+        }else{
+            return response()->json(['error' => "You can't view the games of other player"]);
+        }
+
+        // $games = Game::where('user_id', $id)->get();
+        // return response()->json(["Your win rate" => User::find($id)['winRate'] , "Games" => $games]);
+
     }
 
     public function store($id){

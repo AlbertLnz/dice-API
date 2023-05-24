@@ -85,8 +85,29 @@ class UserTest extends TestCase
 
     }
 
+    //SHOW (CORRECT)
+    public function test_show_correct_user(){
+        $user = User::factory()->create()->assignRole('client');
+        Passport::actingAs($user);
 
-    
+        $this->get(route('api.players.show' , $user->id))->assertOk()->assertJsonStructure([
+            'Your win rate',
+            'Games'
+        ]);
+    }
+
+    //SHOW (INCORRECT)
+    public function test_show_incorrect_user(){
+        $user = User::factory()->create()->assignRole('client');
+        Passport::actingAs($user);
+
+        $otherId = User::inRandomOrder()->where('id', '!=', $user->id)->first()->id;
+
+        $this->get(route('api.players.show' , $otherId))->assertOk()->assertJsonStructure([
+            'error'
+        ]);
+    }
+
 
 
 
