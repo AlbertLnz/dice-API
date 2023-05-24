@@ -35,33 +35,33 @@ class UserController extends Controller
     public function show($id){
         if(Auth::user()->id == $id){
             $games = Game::where('user_id', $id)->get();
-            return response()->json(["Your win rate" => User::find($id)['winRate'] , "Games" => $games]);
+            return response()->json(["Your win rate" => User::find($id)['winRate'] , "Games" => $games], 200);
         }else{
-            return response()->json(['error' => "You can't view the games of other player"]);
+            return response()->json(['error' => "You can't view the games of other player"], 401);
         }
-
-        // $games = Game::where('user_id', $id)->get();
-        // return response()->json(["Your win rate" => User::find($id)['winRate'] , "Games" => $games]);
-
     }
 
     public function store($id){
 
-        $user = User::find($id);
-        $userServiceMethods = new UserService;
+        if(Auth::user()->id == $id){
+            $user = User::find($id);
+            $userServiceMethods = new UserService;
 
-        $game = new Game;
-        $game['dice1'] = $game->dice1;
-        $game['dice2'] = $game->dice2;
-        $game['numberResult'] = $game->numberResult;
-        $game['textResult'] = $game->textResult;
-        $game['user_id'] = $user->id;
-        
-        $game->save();
+            $game = new Game;
+            $game['dice1'] = $game->dice1;
+            $game['dice2'] = $game->dice2;
+            $game['numberResult'] = $game->numberResult;
+            $game['textResult'] = $game->textResult;
+            $game['user_id'] = $user->id;
+            
+            $game->save();
 
-        $userServiceMethods->updateWinRate($user);
+            $userServiceMethods->updateWinRate($user);
 
-        return response()->json($game);
+            return response()->json(['game' => $game], 200);
+        }else{
+            return response()->json(['error' => "You can't view the games of other player"], 401);
+        }
     }
 
     public function update($id, Request $request){

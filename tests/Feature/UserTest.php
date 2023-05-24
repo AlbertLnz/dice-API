@@ -68,7 +68,7 @@ class UserTest extends TestCase
     public function test_bad_index_no_permission_role_client(){
         $user = User::factory()->create()->assignRole('client');
 
-        Passport::actingAs($user); // ¿token???: $token = $user->createToken('Personal Access Token')->accessToken;
+        Passport::actingAs($user);
 
         $response = $this->actingAs($user)->getJson(route('api.players.index'));
         $response->assertStatus(403);
@@ -78,7 +78,7 @@ class UserTest extends TestCase
     public function test_ok_index_permission_role_admin(){
         $user = User::factory()->create()->assignRole('admin');
 
-        Passport::actingAs($user); // ¿token???: $token = $user->createToken('Personal Access Token')->accessToken;
+        Passport::actingAs($user);
 
         $response = $this->actingAs($user)->getJson(route('api.players.index'));
         $response->assertStatus(200);
@@ -103,9 +103,32 @@ class UserTest extends TestCase
 
         $otherId = User::inRandomOrder()->where('id', '!=', $user->id)->first()->id;
 
-        $this->get(route('api.players.show' , $otherId))->assertOk()->assertJsonStructure([
+        $this->get(route('api.players.show' , $otherId))->assertStatus(401)->assertJsonStructure([
             'error'
         ]);
+    }
+
+    //STORE (CORRECT)
+    public function test_store_correct_id_play_game(){
+        $user = User::factory()->create()->assignRole('client');
+        Passport::actingAs($user);
+
+        $this->post(route('api.players.store', $user->id))->assertOk()->assertJsonStructure([
+            'game'
+        ]);
+    }
+
+    //STORE (INCORRECT)
+    public function test_store_incorrect_id_not_play_game(){
+        $user = User::factory()->create()->assignRole('client');
+        Passport::actingAs($user);
+
+        $otherId = User::inRandomOrder()->where('id', '!=', $user->id)->first()->id;
+
+        $this->post(route('api.players.store' , $otherId))->assertStatus(401)->assertJsonStructure([
+            'error'
+        ]);
+
     }
 
 
