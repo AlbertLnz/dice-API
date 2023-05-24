@@ -158,5 +158,29 @@ class UserTest extends TestCase
         $response->assertStatus(401);
     }
 
+    //DESTROY (CORRECT)
+    public function test_destroy_user_games_correctly(){
+        $user = User::factory()->create()->assignRole('client');
+        Passport::actingAs($user);
 
+        $response = $this->delete(route('api.players.destroy', $user->id))->assertJsonStructure([
+            'message'
+        ]);
+
+        $response->assertStatus(200);
+    }
+
+    //DESTROY (INCORRECT)
+    public function test_destroy_other_user_games(){
+        $user = User::factory()->create()->assignRole('client');
+        Passport::actingAs($user);
+
+        $otherId = User::inRandomOrder()->where('id', '!=', $user->id)->first()->id;
+
+        $response = $this->delete(route('api.players.destroy', $otherId))->assertJsonStructure([
+            'error'
+        ]);
+
+        $response->assertStatus(401);
+    }
 }

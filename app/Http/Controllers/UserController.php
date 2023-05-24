@@ -82,10 +82,16 @@ class UserController extends Controller
     }
 
     public function destroy($id){
-        Game::where('user_id', $id)->delete();
-        User::where('id', $id)->update(['winRate' => null]);
 
-        return response(['message' => "Player Games deleted!"]);
+        if(Auth::user()->id == $id){
+            Game::where('user_id', $id)->delete();
+            User::where('id', $id)->update(['winRate' => null]);
+
+            return response(['message' => "Player Games deleted!"], 200);
+
+        }else{
+            return response(['error' => "You can't delete games of other player!"], 401);
+        }
     }
 
 
