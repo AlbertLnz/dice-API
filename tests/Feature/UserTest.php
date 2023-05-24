@@ -8,6 +8,7 @@ use Tests\TestCase;
 use Illuminate\Support\Facades\Artisan;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
+use Laravel\Passport\Passport;
 
 class UserTest extends TestCase
 {
@@ -57,5 +58,36 @@ class UserTest extends TestCase
         
         $response->assertJsonStructure(['token'])->assertOk();
     }
+
+    //INDEX (INCORRECT)
+    public function test_bad_index_no_permission_not_logged(){
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->getJson(route('api.players.index'));
+        $response->assertStatus(401);
+    }
+    public function test_bad_index_no_permission_role_client(){
+        $user = User::factory()->create()->assignRole('client');
+
+        Passport::actingAs($user); // ¿token???: $token = $user->createToken('Personal Access Token')->accessToken;
+
+        $response = $this->actingAs($user)->getJson(route('api.players.index'));
+        $response->assertStatus(403);
+    }
+    
+    // INDEX (CORRECT)
+    public function test_ok_index_permission_role_admin(){
+        $user = User::factory()->create()->assignRole('admin');
+
+        Passport::actingAs($user); // ¿token???: $token = $user->createToken('Personal Access Token')->accessToken;
+
+        $response = $this->actingAs($user)->getJson(route('api.players.index'));
+        $response->assertStatus(200);
+
+    }
+
+
+    
+
+
 
 }

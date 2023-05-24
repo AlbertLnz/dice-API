@@ -9,17 +9,25 @@ use App\Models\Game;
 use App\Http\Services\UserService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     //ADMIN ROUTES
     public function index(){
 
-        $allPlayers = User::all(); //object
-        $userServiceMethods = new UserService;
-        $userServiceMethods->updateWinRateAllUsers();
+        if(Auth::user()->hasRole('admin')){
+            $allPlayers = User::all(); //object
+            $userServiceMethods = new UserService;
+            $userServiceMethods->updateWinRateAllUsers();
+    
+            return response()->json(['allPlayers' => $allPlayers], 200);
+        }else if(Auth::user()->hasRole('client')){
+            return response()->json(['error' => "Unauthorized, you're not an admin"], 403);
+        }else{
+            return response()->json(['error' => "Unauthorized, you're not logged"], 401);
+        }
 
-        return $allPlayers;
     }
 
 
