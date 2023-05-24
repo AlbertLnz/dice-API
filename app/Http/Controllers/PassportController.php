@@ -16,25 +16,23 @@ class PassportController extends Controller
         $data = $request->all();
 
         $validator = Validator::make($data, [
-            'name' => 'min:4',
-            'email' => 'required | email',
-            'password' => 'min:6',
+            'email' => 'email | required',
+            'password' => 'min:6 | required',
         ]);
 
         if($validator->fails()){
-            return response(['error' => $validator->errors(), "Validation error"]);
+            return response(['error' => $validator->errors(), "Validation error"], 302);
         }
     
         $user = User::create([
-            'name' => $request->fillable('name') ? $request->name : "anonymous",
+            'name' => $request->filled('name') ? $request->name : "anonymous",
             'email' => $request->email,
-            'password' => $request->fillable('password') ? $request->password : "password",
             'password' => bcrypt($request->password),
-        ]);
+        ])->assignRole('client');
 
         $token = $user->createToken('Personal Access Token')->accessToken;
 
-        return response()->json(['token' => $token], 200);
+        return response()->json(['user' => $user, 'token' => $token], 200);
     }
 
     public function login(Request $request){
@@ -46,7 +44,7 @@ class PassportController extends Controller
         ]);
 
         if($validator->fails()){
-            return response(['error' => $validator->errors(), "Validation error"]);
+            return response(['error' => $validator->errors(), "Validation error"], 302);
         }
 
         if(auth()->attempt($data)){
@@ -61,6 +59,6 @@ class PassportController extends Controller
         $token = Auth::user()->token();
         $token->revoke();
 
-        return response()->json(['message' => 'Succesfully logged out']);
+        return response()->json(['message' => 'Succesfully logged out'], 200);
     }
 }
