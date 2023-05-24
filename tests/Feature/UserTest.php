@@ -202,4 +202,19 @@ class UserTest extends TestCase
 
         $this->post(route('api.logout'))->assertStatus(500);
     }
+
+    //RANKINGS
+    public function test_general_ranking_access(){
+        $this->get(route('api.players.generalRanking'))->assertJsonStructure([
+            'Average win rate of users'
+        ])->assertOk();
+    }
+
+    public function test_winner_ranking_access(){
+        $this->get(route('api.players.winnerRanking'))->assertOk();
+    }
+
+    public function test_loser_ranking_access(){
+        $this->get(route('api.players.loserRanking'))->assertOk();
+    }
 }
