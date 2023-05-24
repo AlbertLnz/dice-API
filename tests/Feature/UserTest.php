@@ -23,7 +23,6 @@ class UserTest extends TestCase
 
     //REGISTER (CORRECT)
     public function test_ok_register_being_anonymous(){
-
         $response = $this->post(route('api.register'),[
             'email' => fake()->unique()->email(),
             'password' => 'password'
@@ -48,7 +47,6 @@ class UserTest extends TestCase
 
     //LOGIN (CORRECT)
     public function test_ok_login(){
-
         $user = User::factory()->create();
 
         $response = $this->postJson(route('api.login'),[
@@ -57,6 +55,8 @@ class UserTest extends TestCase
         ]);
         
         $response->assertJsonStructure(['token'])->assertOk();
+
+        return $response->json(['token']);
     }
 
     //INDEX (INCORRECT)
@@ -182,5 +182,24 @@ class UserTest extends TestCase
         ]);
 
         $response->assertStatus(401);
+    }
+
+    //LOGOUT (CORRECT)
+    public function test_logout_correctly(){
+        $token = $this->test_ok_login();
+
+        $response = $this->post(route('api.logout'), [], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
+
+        $response->assertOk();
+    }
+
+    //LOGOUT (INCORRECT)
+    public function test_logout_incorrectly_user_not_logged(){
+        $user = User::factory()->create()->assignRole('client');
+        Passport::actingAs($user);
+
+        $this->post(route('api.logout'))->assertStatus(500);
     }
 }
