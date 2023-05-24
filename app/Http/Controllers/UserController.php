@@ -75,9 +75,9 @@ class UserController extends Controller
         ]);
 
         if($validator->fails()){
-            return response(['error' => $validator->errors()]);
+            return response(['error' => $validator->errors()], 401);
         }else{
-            return response(['message' => "Player updated!", "Sent" => $player->update($request->all())]);
+            return response(['message' => "Player updated!", "Sent" => $player->update($request->all())], 200);
         }
     }
 

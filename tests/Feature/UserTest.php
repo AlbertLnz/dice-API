@@ -63,11 +63,11 @@ class UserTest extends TestCase
     public function test_bad_index_no_permission_not_logged(){
         $user = User::factory()->create();
         $response = $this->actingAs($user)->getJson(route('api.players.index'));
+
         $response->assertStatus(401);
     }
     public function test_bad_index_no_permission_role_client(){
         $user = User::factory()->create()->assignRole('client');
-
         Passport::actingAs($user);
 
         $response = $this->actingAs($user)->getJson(route('api.players.index'));
@@ -77,7 +77,6 @@ class UserTest extends TestCase
     // INDEX (CORRECT)
     public function test_ok_index_permission_role_admin(){
         $user = User::factory()->create()->assignRole('admin');
-
         Passport::actingAs($user);
 
         $response = $this->actingAs($user)->getJson(route('api.players.index'));
@@ -131,7 +130,33 @@ class UserTest extends TestCase
 
     }
 
+    //UPDATE (CORRECT)
+    public function test_update_user_correctly(){
+        $user = User::factory()->create()->assignRole('client');
+        Passport::actingAs($user);
 
+        $response = $this->putJson(route('api.players.update', $user->id),[
+            'name' => 'xxxxxx',
+            'email' => fake()->unique()->email(),
+            'password' => 'password',
+        ]);
+
+        $response->assertOk();
+
+    }
+
+    //UPDATE (INCORRECT)
+    public function test_update_user_incorrectly_wrong_data_no_name(){
+        $user = User::factory()->create()->assignRole('client');
+        Passport::actingAs($user);
+
+        $response = $this->putJson(route('api.players.update', $user->id),[
+            'email' => fake()->unique()->email(),
+            'password' => 'password',
+        ]);
+
+        $response->assertStatus(401);
+    }
 
 
 }
