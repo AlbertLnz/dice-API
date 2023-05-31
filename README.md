@@ -1,66 +1,111 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Dice-API Project (v.1)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Dice-API project is a game played with 2 dice, if the sum of the result of the two dice is 7, the game is won. To play, you must first be registered as a user (client role). In case of blank login, the application also include an anonymous client login.
+The user can:
+ · Play a game (store)
+ · See their games with their win rate constantly updated (show)
+ · Update their data (update)
+ · Delete all their games and restore his win rate to null (destroy)
 
-## About Laravel
+In the API, there is also an admin role that can see all the players with their games and a average win rate of all players in the application.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+$\textcolor{lime}{\textsf{The API was developed respecting the MVC design pattern and also includes a Service layer that helps keep the UserController clean.}}$
+ 
+## How to install
+###  · Cloning the repository
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+ 1. Create a new folder on your Desktop and do it "Git Bash Here" (you need to have installed [git](https://git-scm.com/)).
+ 2. Copy the next command on your GIT tab:
+	```
+	git clone https://github.com/AlbertLnz/dice-API.git
+	```
+	
+ 3. Edit the **example.env** file to **.env** in our files and configure the DB migration:
+	```
+	DB:DATABASE=db_name
+	```
+ 4. Be sure that you are inside the app:
+	```
+	cd dice-API
+	```
+ 5. Execute the next command to download the project dependencies (you must have installed [composer](https://getcomposer.org/))
+	```
+	composer install
+	```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+ 6. Generate a key for the application:
+	```
+	php artisan key:generate
+	```
+	
+ 7. Create the tables of the Database:
+	```
+	php artisan migrate
+	```
+	
+ 8. ***OPTIONAL:*** Let's configurate the admin of the API, a client user and a number of example games:
+    
 
-## Learning Laravel
+	>8.0. *Default:* </br>
+	 · admin -> albert@gmail.com</br>
+	 · player1 -> maria@gmail.com</br>
+	 · number of games -> 15
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+	>8.1. To change the admin and 1 user example, let's go to the ***\folder\dice-API\database\seeders\UserSeeder.php*** and change the 'name', 'email' and 'password' attributes.
+*If we want, we can delete the user example called Maria per default*
+    <img src="https://github.com/AlbertLnz/dice-API/assets/120119395/5f089b29-30fb-4c48-af45-0a1d7c15016e" width="400" alt="Edit UserSeeder">
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+	>8.2. And to change the games (that will be randomly distributed by the usernames we have defined in the previous step), go to: ***\folder\dice-API\database\seeders\DatabaseSeeder.php***
+    <img src="https://github.com/AlbertLnz/dice-API/assets/120119395/5ced4ef3-e379-4e85-88be-cfb587b8d744" width="400" alt="Edit UserSeeder">
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+9. And now we are going to migrate the configuration made it.
+	```
+	php artisan migrate:fresh --seed
+	```
+    
+10. Install Laravel Passport creating it's encryption keys:
+	```
+	php artisan passport:install
+	```
 
-## Laravel Sponsors
+11. And finally create Personal Access Token for the users we will create:
+	```
+	php artisan passport:client --personal
+	```
+    &#8594; Name of personal access token: **Personal Access Token**
+    
+    And we copy the **Client secret** generate on terminal and paste it in the **.env** file without quotation marks like the image below:
+   	```
+	PASSPORT_PERSONAL_ACCESS_CLIENT_ID=3
+    PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET="Client secret"
+	```
+    <img src="https://github.com/AlbertLnz/dice-API/assets/120119395/3f978363-95ac-4457-9dfc-24204ee41b24" width="800" alt="Personal Access Client">
+    
+    :arrow_right: *Every time we do a fresh migrate, we must generate the encryption keys & Personal Access Token (steps 10 & 11)*
+        
+## Try it in [Postman](https://www.postman.com/)!
+Once configurate correctly the project, we can prove it in Postam running a serve:
+```
+php artisan serve
+```
+*Every time we do a migrate fresh of our DB, we can generate the encryption keys & Personal Access Token (Steps 10 & 11)*
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Testing
+*The realization of testing will behave a creation of Users & Games (do a fresh migrate after test)*
+```
+php artisan test --filter UserTest
+```
+<img src="https://github.com/AlbertLnz/dice-API/assets/120119395/ab6c56cf-0f6c-4c6a-96fb-00808788a8db" width="250" alt="Edit UserSeeder">
 
-### Premium Partners
+## Technologies used
+### Languages:
+![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=AlbertLnz&theme=dice-API)
+### Framework & Tools used:
+<a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="300" alt="Laravel Logo"></a></br>
+<a href="https://www.postman.com" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/Postman_%28software%29.png" width="200" alt="Postman Logo"></a>
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## About me / License
+· [Github Albert](https://github.com/AlbertLnz) </br>
+· [Linkedin Albert](https://www.linkedin.com/in/albert-l-342138178/)
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Albert Lanza Rio
