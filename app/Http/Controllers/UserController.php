@@ -97,14 +97,14 @@ class UserController extends Controller
 
     //GENERAL ROUTES
     public function generalRanking(){
-        return response(['Average win rate of users' => DB::table('users')->sum('winRate') / User::all()->count()."%"]);
+        return DB::table('users')->select('id', 'name', 'email', 'winRate')->get();
     }
 
     public function winnerRanking(){
-        return DB::table('users')->where('winRate', DB::table('users')->max('winRate'))->get();
+        return DB::table('users')->select('id', 'name', 'email', 'winRate')->where('winRate', DB::table('users')->max('winRate'))->get();
     }
 
     public function loserRanking(){
-        return DB::table('users')->where('winRate', DB::table('users')->min('winRate'))->get();
+        return DB::table('users')->select('id', 'name', 'email', 'winRate')->where('winRate', DB::table('users')->min('winRate'))->get();
     }
 }
