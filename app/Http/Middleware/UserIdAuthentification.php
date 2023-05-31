@@ -6,6 +6,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
 class UserIdAuthentification
 {
     /**
@@ -13,8 +16,12 @@ class UserIdAuthentification
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+    public function handle(Request $request, Closure $next, $id): Response
     {
-        return $next($request);
+        if(Auth::user()->id == $id){
+            return $next($request);
+        }else{
+            return response(['error' => "Intruder!!"], 401);
+        }
     }
 }

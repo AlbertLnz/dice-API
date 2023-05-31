@@ -26,16 +26,16 @@ Route::post('login', [PassportController::class, 'login'])->name('api.login');
 
 //Admin Routes
 Route::middleware('auth:api')->group(function(){
-    Route::get('players', [UserController::class, 'index'])->name('api.players.index');
+    Route::get('players', [UserController::class, 'index'])->name('api.players.index')->middleware('role:admin');
 });
 
 //User Routes
 Route::middleware('auth:api')->group(function(){
-    Route::get('players/{id}/games', [UserController::class, 'show'])->name('api.players.show');
-    Route::post('players/{id}/games', [UserController::class, 'store'])->name('api.players.store');
-    Route::put('players/{id}', [UserController::class, 'update'])->name('api.players.update');
-    Route::delete('players/{id}/games', [UserController::class, 'destroy'])->name('api.players.destroy');
-    Route::post('logout', [PassportController::class, 'logout'])->name('api.logout');
+    Route::get('players/{id}/games', [UserController::class, 'show'])->name('api.players.show')->middleware('role:admin,client');
+    Route::post('players/{id}/games', [UserController::class, 'store'])->name('api.players.store')->middleware('role:admin,client');;
+    Route::put('players/{id}', [UserController::class, 'update'])->name('api.players.update')->middleware('role:admin,client');;
+    Route::delete('players/{id}/games', [UserController::class, 'destroy'])->name('api.players.destroy')->middleware('role:admin,client');;
+    Route::post('logout', [PassportController::class, 'logout'])->name('api.logout')->middleware('role:admin,client');;
 });
 
 //General Routes
