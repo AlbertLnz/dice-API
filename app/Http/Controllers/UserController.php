@@ -68,17 +68,22 @@ class UserController extends Controller
         $player = User::find($id);
         $data = $request->all();
 
-        $validator = Validator::make($data, [
-            'name' => 'required | min:3',
-            'email' => 'required | email | max:50',
-            'password' => 'required | min:6'
-        ]);
-
-        if($validator->fails()){
-            return response(['error' => $validator->errors()], 401);
+        if(Auth::user()->id == $id){
+            $validator = Validator::make($data, [
+                'name' => 'required | min:3',
+                'email' => 'required | email | max:50',
+                'password' => 'required | min:6'
+            ]);
+    
+            if($validator->fails()){
+                return response(['error' => $validator->errors()], 401);
+            }else{
+                return response(['message' => "Player updated!", "Sent" => $player->update($request->all())], 200);
+            }
         }else{
-            return response(['message' => "Player updated!", "Sent" => $player->update($request->all())], 200);
+            return response(['error' => "You can't edit data of other player!"], 401);
         }
+
     }
 
     public function destroy($id){
