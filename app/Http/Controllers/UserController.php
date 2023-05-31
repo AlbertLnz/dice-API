@@ -102,7 +102,7 @@ class UserController extends Controller
 
     //GENERAL ROUTES
     public function generalRanking(){
-        return DB::table('users')->select('id', 'name', 'email', 'winRate')->get();
+        return DB::table('users')->select('id', 'name', 'email', 'winRate')->orderBy('winRate', 'desc')->get();
     }
 
     public function winnerRanking(){
